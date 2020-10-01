@@ -1,0 +1,5 @@
+#*
+*~
+*.tmp
+build
+pdfa-gs-converter.sh
