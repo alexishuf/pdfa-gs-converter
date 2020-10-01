@@ -3,6 +3,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 THEPACK="${DIR}/$(basename "${BASH_SOURCE[0]}")"
 INPUT="$1"
 OUTPUT="$2"
+OLD_PWD="$(pwd)"
 
 # Validate input parameters
 if [ -z "$INPUT" -o -z "$OUTPUT" ]; then
@@ -15,8 +16,9 @@ if [ "$INPUT" = "$OUTPUT" ]; then
 fi
 
 # Get absolute path to input/output
-echo "$INPUT" | grep -E '^/' || INPUT="$DIR/$INPUT"
-echo "$OUTPUT" | grep -E '^/' || OUTPUT="$DIR/$OUTPUT"
+OLD_PWD=$(pwd)
+echo "$INPUT" | grep -E '^/' || INPUT="$OLD_PWD/$INPUT"
+echo "$OUTPUT" | grep -E '^/' || OUTPUT="$OLD_PWD/$OUTPUT"
 echo "Absolute input path: $INPUT"
 echo "Absolute output path: $OUTPUT"
 
