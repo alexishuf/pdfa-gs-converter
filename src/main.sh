@@ -23,7 +23,7 @@ echo "Absolute input path: $INPUT"
 echo "Absolute output path: $OUTPUT"
 
 # Get PDF metadata
-if ! ( pdfinfo -h &>/dev/null ); then
+if ! [ -x "$(command -v pdfinfo)" ] ; then
   echo "pdfinfo not found. Cannot read PDF metadata (Author/Title) without it" 1>&2
   exit 1
 fi
