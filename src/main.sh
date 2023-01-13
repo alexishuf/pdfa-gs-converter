@@ -34,9 +34,23 @@ TITLE_SED=$(echo $TITLE | sed -E "s/'/\\\\'/")
 AUTHOR_SED=$(echo $AUTHOR | sed -E "s/'/\\\\'/")
 
 # Unpack the support files hidden in this script
-WDIR=$(mktemp -d)
-cd $WDIR
-tail -n +$(($(grep -ahn  '^__GENERATE_PDFA_SH_MARKER__' "$THEPACK" | cut -f1 -d:) +1)) "$THEPACK" | tar zx
+WDIR="$(mktemp -d)"
+if [ "$?" != "0" -o ! -d "$WDIR" ]; then
+    echo "Could not create random temp dir"
+    exit 1
+fi
+cd "$WDIR"
+TAR_START="$(grep -ahn  '^__GENERATE_PDFA_SH_MARKER__' "$THEPACK" | cut -f1 -d:)"
+if ! ( echo "$TAR_START" | grep -E '[0-9]+' &>/dev/null ); then
+    echo "Failed to locate __GENERATE_PDFA_SH_MARKER__ in myself ($THEPACK). Only GNU and MacOS BSD variants of grep/cut are supported"
+    exit 1
+fi
+tail -n +$(($TAR_START +1)) "$THEPACK" | tar zx
+if [ "$?" != "0" ]; then
+    echo "Extraction of tar archive in myself ($THEPACK) failed"
+    exit 1
+fi
+
 
 # Patch PDFA_bu.ps file with metadata and absolute paths
 if ! ( sed -iE "s\$__TITLE__\$$TITLE_SED\$" PDFA_bu.ps ); then
@@ -69,11 +83,11 @@ if [ "$?" != "0" ]; then
 fi
 
 # Show metadata (if installed)
-LOG=$(mktemp)
+LOG="$(mktemp)"
 if ( exiftool -a -G1 "$OUTPUT" &> "$LOG" ); then
   cat "$LOG"
 else
-  rm $LOG
+  rm "$LOG"
 fi
 
 echo -e "\nWrote $OUTPUT\n" \
