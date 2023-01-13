@@ -3,7 +3,7 @@ PDF/A generator
 
 This is a no-configuration converter from any PDF file into a PDF/A A-1b (using PDF 1.4 format). The metadata for `Title` and `Creator` come from the plain PDF tags `Title`and `Author`.
 
-Any feature in the PDF that is not allied in PDF/A is removed to ensure PDF/A conformance. Ghostscript will output warning for each occurrence of these featured in the input PDF. When converting a thesis PDF file, the most frequently features dropped by Ghostscript will likely be the PDF annotations (used among other thing to create hyperlinks).
+Any feature in the PDF that is not allowed in PDF/A is removed to ensure PDF/A conformance. Ghostscript will output warning for each occurrence of these featured in the input PDF. When converting a thesis PDF file, the most frequently features dropped by Ghostscript will likely be the PDF annotations (used among other thing to create hyperlinks).
 
 PDF/A requires that not only fonts, but also color profiles be defined and embedded. To provide a configuration-free experience, sRGB is chosen as the profile (the `srgb.icc` file comes from Ghostscript 9.53.2 distribution).
 
